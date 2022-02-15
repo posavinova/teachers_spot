@@ -1,0 +1,12 @@
+# Dev tools
+*.idea
+.vscode
+.DS_Store
+
+# Environments
+venv
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
