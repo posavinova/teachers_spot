@@ -28,14 +28,15 @@ if __name__ == "__main__":
         uploaded_file = st.file_uploader("Выберите файл с расширением .csv, содержащий данные об учениках", type="csv")
         if uploaded_file:
             my_class = pd.read_csv(uploaded_file)
+            number_std = len(my_class)
     else:
         my_class = pd.DataFrame(
             columns=["Имя учащегося", "Пол", "Преобладающая рука", "Проблемы со зрением/слухом", "Рост"])
 
-        number = st.number_input("Количество учеников:", max_value=30)
+        number_std = st.number_input("Количество учеников:", max_value=30)
 
         with st.expander("Добавить информацию", expanded=True):
-            for idx in range(number):
+            for idx in range(number_std):
                 with st.form(key=f"student_form{idx}", clear_on_submit=False):
                     name = st.text_input("Введите имя и фамилию учащегося")
                     vision = st.checkbox("Проблемы со зрением/слухом")

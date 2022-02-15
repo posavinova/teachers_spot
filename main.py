@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 def process_class(df):
     df.columns = ["name", "sex", "hand", "glasses", "height"]
     df["sex"] = df["sex"].replace(
@@ -22,7 +21,7 @@ def process_class(df):
             "высокий": 3
         }
     )
-    df = df.sort_values(["glasses", "height"], ascending=(False, True))
+    df = df.sort_values(["height", "glasses"], ascending=(True, False))
     df1 = df[:12]
     df2 = df[12:18]
     df3 = df[18:]
@@ -74,6 +73,7 @@ def mix_students(df):
 def make_html(filtered):
     html_plan = """<!DOCTYPE html>
     <head>
+    <META charset="utf-8">
     <title>Desks Schema</title>
     <style>
     h1 {
@@ -81,24 +81,43 @@ def make_html(filtered):
     font-family: cursive;
     color: #333366;
     }
-    div {
+    table    {
     font-family: cursive;
     color: #333366;
-    font-size: 80%;
-    }
-    .column {
-    width: 33.33%;
-    padding: 30px;
     }
     </style>
     </head>
-    <body>
     <h1>План рассадки учеников</h1>
-    <div class="row">
     """
-    for idx, std in enumerate(filtered):
-        if idx % 6 == 0:
-            html_plan += "<div class=\"column\"></div>\n"
-        html_plan += f"<img src=https://pickimage.ru/wp-content/uploads/images/detskie/schooldesk/parta5.jpg alt=\"desk\" style=\"width:7%\">{std}\n"
-    html_plan += "</div></body>"
+    row = """
+    <table width="95%" align="center">
+            <tr>
+                <td align="center" valign="top" width="10%"><img src=https://pickimage.ru/wp-content/uploads/images/detskie/schooldesk/parta5.jpg alt="desk" width="80%"></td>
+                <td align="center" valign="top" width="10%"><img src=https://pickimage.ru/wp-content/uploads/images/detskie/schooldesk/parta5.jpg alt="desk" width="80%"></td>
+                <td width="3%" rowspan="3"></td>
+                <td align="center" valign="top" width="10%"><img src=https://pickimage.ru/wp-content/uploads/images/detskie/schooldesk/parta5.jpg alt="desk" width="80%"></td>
+                <td align="center" valign="top" width="10%"><img src=https://pickimage.ru/wp-content/uploads/images/detskie/schooldesk/parta5.jpg alt="desk" width="80%"></td>
+                <td width="3%" rowspan="3"></td>
+                <td align="center" valign="top" width="10%"><img src=https://pickimage.ru/wp-content/uploads/images/detskie/schooldesk/parta5.jpg alt="desk" width="80%"></td>
+                <td align="center" valign="top" width="10%"><img src=https://pickimage.ru/wp-content/uploads/images/detskie/schooldesk/parta5.jpg alt="desk" width="80%"></td>
+            </tr>
+            <tr>
+                <td align="center" valign="top" width="10%">{}</td>
+                <td align="center" valign="top" width="10%">{}</td>
+                <td align="center" valign="top" width="10%">{}</td>
+                <td align="center" valign="top" width="10%">{}</td>
+                <td align="center" valign="top" width="10%">{}</td>
+                <td align="center" valign="top" width="10%">{}</td>
+            </tr>
+            <tr>
+                <td colspan="8" height="10"></td>
+            </tr>
+    </table>
+    """
+    while not len(filtered) % 6 == 0:
+        filtered.append("*здесь пусто*")
+    rows = row * (len(filtered) // 6)
+    rows = rows.format(*filtered)
+    html_plan += rows
+
     return html_plan
