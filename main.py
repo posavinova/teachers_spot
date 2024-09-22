@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def process_class(df):
     df.columns = ["name", "sex", "hand", "glasses", "height"]
     df["sex"] = df["sex"].replace(
@@ -7,20 +8,23 @@ def process_class(df):
             "М": "M",
             "Ж": "F"
         }
-    )
+    ).infer_objects(copy=False)
+
     df["hand"] = df["hand"].replace(
         {
             "правая": "R",
             "левая": "L",
         }
-    )
+    ).infer_objects(copy=False)
+
     df["height"] = df["height"].replace(
         {
             "низкий": 1,
             "средний": 2,
             "высокий": 3
         }
-    )
+    ).infer_objects(copy=False)
+
     df = df.sort_values(["height", "glasses"], ascending=(True, False))
     df1 = df[:12]
     df2 = df[12:18]
@@ -38,14 +42,14 @@ def mix_students(df):
         to_div = [index for index in list(df_g.index) if index not in list(df_b.index)]
         to_add = df_g.iloc[len(df_b)+len(df_g.iloc[to_div[0]:]) // 2:]
         df_g = df_g.iloc[:len(df_b)+len(df_g.iloc[to_div[0]:]) // 2]
-        df_b = df_b.append(to_add)
+        df_b = pd.concat([df_b, to_add], ignore_index=True)
         mixed = pd.concat([df_g.reset_index(drop=True), df_b.reset_index(drop=True)], axis=1)
 
     elif len(df_g) < len(df_b):
         to_div = [index for index in list(df_b.index) if index not in list(df_g.index)]
         to_add = df_b.iloc[len(df_g)+len(df_b.iloc[to_div[0]:]) // 2:]
         df_b = df_b.iloc[:len(df_g)+len(df_b.iloc[to_div[0]:]) // 2]
-        df_g = df_g.append(to_add)
+        df_g = pd.concat([df_g, to_add], ignore_index=True)
         mixed = pd.concat([df_b.reset_index(drop=True), df_g.reset_index(drop=True)], axis=1)
 
     else:
